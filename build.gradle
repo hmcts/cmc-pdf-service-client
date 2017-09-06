@@ -1,0 +1,55 @@
+plugins {
+  id 'checkstyle'
+  id 'java-library'
+  id 'com.github.ben-manes.versions' version '0.15.0'
+  id 'com.jfrog.bintray' version '1.7.3'
+}
+
+def springBootVersion = '1.5.6.RELEASE'
+
+version '1.2.0'
+
+checkstyle.toolVersion = '7.2'
+checkstyle.configFile = new File(rootDir, "checkstyle.xml")
+
+repositories {
+  mavenLocal()
+  jcenter()
+}
+
+ext {
+  versions = [
+          springBoot      : springBootVersion,
+          spring          : '4.3.10.RELEASE'
+  ]
+}
+
+dependencies {
+  compile group: 'org.springframework', name: 'spring-web', version: versions.spring
+  compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: versions.springBoot
+
+  testCompile group: 'commons-logging', name: 'commons-logging', version: '1.2'
+  testCompile group: 'org.pdfbox', name: 'com.springsource.org.pdfbox', version: '0.7.3'
+  testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from javadoc.destinationDir
+}
+
+artifacts {
+  archives sourcesJar
+  archives javadocJar
+}
+
+task printClientVersion {
+  doLast {
+    print project.version
+  }
+}
