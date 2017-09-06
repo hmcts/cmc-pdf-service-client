@@ -1,36 +1,61 @@
 plugins {
+  id 'java'
+  id 'maven'
+  id 'maven-publish'
   id 'checkstyle'
   id 'java-library'
-  id 'com.github.ben-manes.versions' version '0.15.0'
-  id 'com.jfrog.bintray' version '1.7.3'
+  id "com.jfrog.bintray" version "1.7.3"
 }
 
-def springBootVersion = '1.5.6.RELEASE'
-
+group 'uk.gov.hmcts.reform.cmc'
 version '1.2.0'
 
 checkstyle.toolVersion = '7.2'
 checkstyle.configFile = new File(rootDir, "checkstyle.xml")
+
+// make build fail on Checkstyle issues (https://github.com/gradle/gradle/issues/881)
+tasks.withType(Checkstyle).each { checkstyleTask ->
+  checkstyleTask.doLast {
+    reports.all { report ->
+      def outputFile = report.destination
+      if (outputFile.exists() && outputFile.text.contains("<error ")) {
+        throw new GradleException("There were checkstyle warnings! For more info check $outputFile")
+      }
+    }
+  }
+}
+
+sourceCompatibility = 1.8
 
 repositories {
   mavenLocal()
   jcenter()
 }
 
-ext {
-  versions = [
-          springBoot      : springBootVersion,
-          spring          : '4.3.10.RELEASE'
-  ]
+jar {
+  manifest {
+    attributes 'Implementation-Title': project.name, 'Implementation-Version': project.version
+  }
 }
 
-dependencies {
-  compile group: 'org.springframework', name: 'spring-web', version: versions.spring
-  compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: versions.springBoot
+task printVersion {
+  doLast {
+    print project.version
+  }
+}
 
-  testCompile group: 'commons-logging', name: 'commons-logging', version: '1.2'
-  testCompile group: 'org.pdfbox', name: 'com.springsource.org.pdfbox', version: '0.7.3'
-  testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
+def pomConfig = {
+  licenses {
+    license {
+      name "MIT License"
+      url "http://www.opensource.org/licenses/mit-license.php"
+      distribution "repo"
+    }
+  }
+
+  scm {
+    url "https://github.com/hmcts/cmc-pdf-service-client"
+  }
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -48,8 +73,48 @@ artifacts {
   archives javadocJar
 }
 
-task printClientVersion {
-  doLast {
-    print project.version
+publishing {
+  publications {
+    Main(MavenPublication) {
+      from components.java
+      artifact sourcesJar
+      artifact javadocJar
+      groupId project.group
+      artifactId 'pdf-service-client'
+      version project.version
+
+      pom.withXml {
+        def root = asNode()
+        root.appendNode('description', 'Client library for communicating with cmc-pdf-service')
+        root.appendNode('name', 'CMC PDF service client')
+        root.appendNode('url', 'https://github.com/hmcts/cmc-pdf-service-client')
+        root.children().last() + pomConfig
+      }
+    }
   }
+}
+
+bintray {
+  user = System.getenv('BINTRAY_USER')
+  key = System.getenv('BINTRAY_KEY')
+  publications = ['Main']
+  publish = true
+  pkg {
+    repo = 'hmcts-maven'
+    name = 'pdf-service-client'
+    userOrg = 'hmcts'
+    licenses = ['MIT']
+    vcsUrl = 'https://github.com/hmcts/cmc-pdf-service-client'
+    version {
+      name = project.version
+    }
+  }
+}
+
+def springBootVersion = '1.5.6.RELEASE'
+
+dependencies {
+  compile group: 'org.springframework', name: 'spring-web', version: '4.3.10.RELEASE'
+  compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: springBootVersion
+  testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion
 }
