@@ -12,7 +12,8 @@ deploy:
       secure: SZ5PeoUWTB0LAhFNPuzZwu699GYVISe/fjOj3ll9K8fqvrPTtYlYSOd/fWirgMqfYhinWk3hbPY5kDj9VMkUpWNOqVljmAsdkzw2Qv37QpZZ5cKmrJCQAo/SDD/lHI/nNhB5//Gjtn6+Eoi3cged3hpDa/YqpkDRKoIsVENejssf6KL4B31omYt7LuNdMkIz/rqhVAtbUdpq8J2l0Y5ab1WzYPapSo47xkCqliyo4PvOnZr7zBU8Yb/8b660FShTe+ULRgp+Eh0hwJzqyY2BaSxIzbt/bynMV9yTpsLox4MSyGrAXJ9Wlrwsk85r24/LJIJ9pLVkSuECb8IHg3f8NdyUcajMv9+8PPJpCwH86ytnRnF72/EDNZbzQAFvCVrSh8qOgX/WROLjZtazel8NxtKsXrK0rq5/zA5f6zH77WREz/TM4QnNlgxg94TnjGl/qvi8J5HPUYQ4ucOIy7NrxDASan7DA2/VTX2jYn63C3o/gG1ndUbqIbLMPb/jQ5yV51Ahh243hHwOiLwGeKzNUE6qVQiRhWAWo9drA99oPMINY2X/JfYzKThcIqzdSinHhpVynRNzYPx+r+1FdpnlcL0GkvS2X1yWAxFgUgO9ktyrrXA6xynH6rOwVxV1y1NQaA35hIR/FwiM6i/C5HhbpqUMiWwE1mLsCH3FCJ4tRO0=
     file_glob: true
     file: build/libs/pdf-service-client-*.jar
-    #on:
+    on:
+      branch: feature/test-release
       #tags: true
 env:
   bintray:
