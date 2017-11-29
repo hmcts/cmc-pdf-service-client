@@ -1,6 +1,6 @@
 # PDF service
 
-This is a client library for cmc-pdf-service, which allows to generate read-only PDFs based on given template in HTML/Twig format and 
+This is a client library for pdf-service, which allows to generate read-only PDFs based on given template in HTML/Twig format and 
 placeholder data in JSON format. 
 
 ## Getting started

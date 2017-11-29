@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.cmc.pdf.service.client.exception;
+package uk.gov.hmcts.reform.pdf.service.client.exception;
 
 public class PDFServiceClientException extends RuntimeException {
 

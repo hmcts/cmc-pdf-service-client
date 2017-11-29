@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.cmc.pdf.service.client.util;
+package uk.gov.hmcts.reform.pdf.service.client.util;
 
 import org.junit.Test;
 

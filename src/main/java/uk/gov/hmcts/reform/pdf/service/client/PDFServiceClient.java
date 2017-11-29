@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.cmc.pdf.service.client;
+package uk.gov.hmcts.reform.pdf.service.client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,14 +13,14 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import uk.gov.hmcts.reform.cmc.pdf.service.client.exception.PDFServiceClientException;
+import uk.gov.hmcts.reform.pdf.service.client.exception.PDFServiceClientException;
 
 import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.cmc.pdf.service.client.util.Preconditions.requireNonEmpty;
+import static uk.gov.hmcts.reform.pdf.service.client.util.Preconditions.requireNonEmpty;
 
 public class PDFServiceClient {
 
