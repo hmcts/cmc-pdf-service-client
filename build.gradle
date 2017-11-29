@@ -7,7 +7,7 @@ plugins {
   id "com.jfrog.bintray" version "1.7.3"
 }
 
-group 'uk.gov.hmcts.reform.cmc'
+group 'uk.gov.hmcts.reform'
 version '1.2.2'
 
 checkstyle.toolVersion = '7.2'
@@ -86,7 +86,7 @@ publishing {
       pom.withXml {
         def root = asNode()
         root.appendNode('description', 'Client library for communicating with cmc-pdf-service')
-        root.appendNode('name', 'CMC PDF service client')
+        root.appendNode('name', 'Platform PDF service client')
         root.appendNode('url', 'https://github.com/hmcts/cmc-pdf-service-client')
         root.children().last() + pomConfig
       }

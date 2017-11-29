@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.cmc.pdf.service.client;
+package uk.gov.hmcts.reform.pdf.service.client;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
