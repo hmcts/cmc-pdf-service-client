@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.pdf.service.client.exception.PDFServiceClientException;
 
@@ -27,7 +28,7 @@ public class PDFServiceClient {
     private static final String GENERATE_FROM_HTML_ENDPOINT_PATH = "/html";
     private static final Logger LOGGER = LoggerFactory.getLogger(PDFServiceClient.class);
 
-    private final RestTemplate restTemplate;
+    private final RestOperations restTemplate;
     private final URI pdfServiceBaseUrl;
     private final String version;
 
