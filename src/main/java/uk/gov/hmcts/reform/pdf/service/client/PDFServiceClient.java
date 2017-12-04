@@ -33,11 +33,15 @@ public class PDFServiceClient {
     private final String version;
 
     public PDFServiceClient(URI pdfServiceBaseUrl, String version) {
+        this(new RestTemplate(), pdfServiceBaseUrl, version);
+    }
+
+    public PDFServiceClient(RestOperations restTemplate, URI pdfServiceBaseUrl, String version) {
         this.version = version;
         requireNonNull(pdfServiceBaseUrl);
         requireNonNull(version);
 
-        this.restTemplate = new RestTemplate();
+        this.restTemplate = restTemplate;
         this.pdfServiceBaseUrl = pdfServiceBaseUrl;
     }
 
