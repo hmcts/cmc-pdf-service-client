@@ -15,7 +15,7 @@ public class PDFServiceClientInputChecksTest {
 
     @Before
     public void beforeEachTest() throws URISyntaxException {
-        client = new PDFServiceClient(new URI("http://this-can-be-anything/"), "v1");
+        client = new PDFServiceClient(new URI("http://this-can-be-anything/"));
     }
 
     @Test(expected = NullPointerException.class)
