@@ -50,7 +50,6 @@ public class PDFServiceClient {
                 requestEntityFor(template, placeholders),
                 byte[].class);
         } catch (HttpClientErrorException e) {
-            LOGGER.warn(e.getMessage(), e);
             throw new PDFServiceClientException(e);
         }
     }
