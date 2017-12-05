@@ -62,7 +62,7 @@ public class PDFServiceClientTest {
     }
 
     @Test
-    public void template_contents_are_sent_as_plain_string() throws IOException {
+    public void template_contents_are_sent_in_request_template_field() throws IOException {
         ArgumentCaptor<HttpEntity> httpEntityArgumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
 
         pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
