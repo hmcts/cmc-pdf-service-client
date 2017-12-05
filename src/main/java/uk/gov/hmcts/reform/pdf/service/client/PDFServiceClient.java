@@ -26,6 +26,7 @@ public class PDFServiceClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PDFServiceClient.class);
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    public static final MediaType API_VERSION = MediaType.valueOf("application/vnd.uk.gov.hmcts.pdf-service.v2+json");
     private final RestOperations restTemplate;
     private final URI htmlEndpoint;
     private final URI healthEndpoint;
@@ -89,7 +90,7 @@ public class PDFServiceClient {
         Map<String, Object> placeholders) {
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.valueOf("application/vnd.uk.gov.hmcts.pdf-service.v2+json"));
+        headers.setContentType(API_VERSION);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_PDF));
 
         GeneratePdfRequest request = new GeneratePdfRequest(new String(template), placeholders);

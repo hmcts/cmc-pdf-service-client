@@ -20,7 +20,6 @@ import static org.mockito.Mockito.verify;
 
 public class PDFServiceClientTest {
 
-    private static final String API_MIME_TYPE = "application/vnd.uk.gov.hmcts.pdf-service.v2+json";
     private String endpointBase = "http://localhost";
     private RestOperations restClient = mock(RestOperations.class);
     private String sampleTemplate = "<html>Test</html>";
@@ -47,8 +46,8 @@ public class PDFServiceClientTest {
         ArgumentCaptor<HttpEntity> httpEntityArgumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         verify(restClient).postForObject(any(), httpEntityArgumentCaptor.capture(), any());
 
-        assertThat(httpEntityArgumentCaptor.getValue().getHeaders().getContentType().toString())
-            .isEqualTo(API_MIME_TYPE);
+        assertThat(httpEntityArgumentCaptor.getValue().getHeaders().getContentType())
+            .isEqualTo(PDFServiceClient.API_VERSION);
     }
 
     @Test
