@@ -77,14 +77,13 @@ public class PDFServiceClientTest {
 
     @Test
     public void values_are_passed_along() throws IOException {
-        ArgumentCaptor<HttpEntity> httpEntityArgumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-
         Map<String, Object> values = new HashMap<>();
         values.put("hello", "World!");
         values.put("Foo", "bar");
 
         pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), values);
 
+        ArgumentCaptor<HttpEntity> httpEntityArgumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         verify(restClient).postForObject(any(), httpEntityArgumentCaptor.capture(), any());
 
         GeneratePdfRequest generatePdfRequest = new ObjectMapper()
