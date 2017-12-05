@@ -22,16 +22,16 @@ public class PDFServiceClientTest {
     private String endpointBase = "http://localhost";
     private RestOperations restClient = mock(RestOperations.class);
     private String sampleTemplate = "<html>Test</html>";
-    private PDFServiceClient sut;
+    private PDFServiceClient pdfServiceClient;
 
     @Before
     public void setup() {
-        sut = new PDFServiceClient(restClient, URI.create(endpointBase));
+        pdfServiceClient = new PDFServiceClient(restClient, URI.create(endpointBase));
     }
 
     @Test
     public void requests_new_endpoint() {
-        sut.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
+        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
 
         ArgumentCaptor<URI> uriArgumentCaptor = ArgumentCaptor.forClass(URI.class);
         verify(restClient).postForObject(uriArgumentCaptor.capture(), any(), any());
@@ -40,7 +40,7 @@ public class PDFServiceClientTest {
 
     @Test
     public void request_content_type_contains_versioned_mime_type() {
-        sut.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
+        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
 
         ArgumentCaptor<HttpEntity> httpEntityArgumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         verify(restClient).postForObject(any(), httpEntityArgumentCaptor.capture(), any());
@@ -53,7 +53,7 @@ public class PDFServiceClientTest {
     public void request_accepts_pdf() {
         ArgumentCaptor<HttpEntity> httpEntityArgumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
 
-        sut.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
+        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
 
         verify(restClient).postForObject(any(), httpEntityArgumentCaptor.capture(), any());
 
@@ -64,7 +64,7 @@ public class PDFServiceClientTest {
     public void template_contents_are_sent_as_plain_string() throws IOException {
         ArgumentCaptor<HttpEntity> httpEntityArgumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
 
-        sut.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
+        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
 
         verify(restClient).postForObject(any(), httpEntityArgumentCaptor.capture(), any());
 
