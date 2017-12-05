@@ -27,7 +27,8 @@ public class PDFServiceClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(PDFServiceClient.class);
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private final RestOperations restTemplate;
-    private final URI pdfServiceBaseUrl;
+    private final URI htmlEndpoint;
+    private final URI healthEndpoint;
 
     public PDFServiceClient(URI pdfServiceBaseUrl) {
         this(new RestTemplate(), pdfServiceBaseUrl);
@@ -37,7 +38,8 @@ public class PDFServiceClient {
         requireNonNull(pdfServiceBaseUrl);
 
         this.restTemplate = restTemplate;
-        this.pdfServiceBaseUrl = pdfServiceBaseUrl;
+        htmlEndpoint = pdfServiceBaseUrl.resolve("/pdfs");
+        healthEndpoint = pdfServiceBaseUrl.resolve("/health");
     }
 
     public byte[] generateFromHtml(byte[] template, Map<String, Object> placeholders) {
@@ -46,7 +48,7 @@ public class PDFServiceClient {
 
         try {
             return restTemplate.postForObject(
-                pdfServiceBaseUrl.resolve("/pdfs"),
+                htmlEndpoint,
                 requestEntityFor(template, placeholders),
                 byte[].class);
         } catch (HttpClientErrorException e) {
@@ -66,7 +68,7 @@ public class PDFServiceClient {
             HttpEntity<?> entity = new HttpEntity<Object>("", httpHeaders);
 
             ResponseEntity<InternalHealth> exchange = restTemplate.exchange(
-                pdfServiceBaseUrl.resolve("/health"),
+                healthEndpoint,
                 HttpMethod.GET,
                 entity,
                 InternalHealth.class);
