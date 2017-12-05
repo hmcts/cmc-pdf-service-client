@@ -11,6 +11,7 @@ import org.springframework.web.client.RestOperations;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -72,5 +73,23 @@ public class PDFServiceClientTest {
             .readValue(httpEntityArgumentCaptor.getValue().getBody().toString(), GeneratePdfRequest.class);
 
         assertThat(generatePdfRequest.template).isEqualTo(sampleTemplate);
+    }
+
+    @Test
+    public void values_are_passed_along() throws IOException {
+        ArgumentCaptor<HttpEntity> httpEntityArgumentCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+
+        Map<String, Object> values = new HashMap<>();
+        values.put("hello", "World!");
+        values.put("Foo", "bar");
+
+        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), values);
+
+        verify(restClient).postForObject(any(), httpEntityArgumentCaptor.capture(), any());
+
+        GeneratePdfRequest generatePdfRequest = new ObjectMapper()
+            .readValue(httpEntityArgumentCaptor.getValue().getBody().toString(), GeneratePdfRequest.class);
+
+        assertThat(generatePdfRequest.values).containsAllEntriesOf(values);
     }
 }
