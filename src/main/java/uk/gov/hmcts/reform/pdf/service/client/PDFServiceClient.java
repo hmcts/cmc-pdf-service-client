@@ -53,7 +53,7 @@ public class PDFServiceClient {
                 createRequestEntityFor(template, placeholders),
                 byte[].class);
         } catch (HttpClientErrorException e) {
-            throw new PDFServiceClientException(e);
+            throw new PDFServiceClientException("Failed to request PDF from REST endpoint", e);
         }
     }
 
@@ -97,7 +97,7 @@ public class PDFServiceClient {
         try {
             return new HttpEntity<>(OBJECT_MAPPER.writeValueAsString(request), headers);
         } catch (JsonProcessingException e) {
-            throw new PDFServiceClientException(e);
+            throw new PDFServiceClientException("Failed to convert PDF request into JSON", e);
         }
     }
 }

@@ -6,4 +6,7 @@ public class PDFServiceClientException extends RuntimeException {
         super(cause);
     }
 
+    public PDFServiceClientException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
