@@ -49,7 +49,7 @@ public class PDFServiceClient {
         try {
             return restTemplate.postForObject(
                 htmlEndpoint,
-                requestEntityFor(template, placeholders),
+                createRequestEntityFor(template, placeholders),
                 byte[].class);
         } catch (HttpClientErrorException e) {
             throw new PDFServiceClientException(e);
@@ -84,7 +84,7 @@ public class PDFServiceClient {
         }
     }
 
-    private HttpEntity<String> requestEntityFor(
+    private HttpEntity<String> createRequestEntityFor(
         byte[] template,
         Map<String, Object> placeholders) {
 
