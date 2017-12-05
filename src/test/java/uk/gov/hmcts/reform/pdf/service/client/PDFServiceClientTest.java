@@ -89,6 +89,6 @@ public class PDFServiceClientTest {
         GeneratePdfRequest generatePdfRequest = new ObjectMapper()
             .readValue(httpEntityArgumentCaptor.getValue().getBody().toString(), GeneratePdfRequest.class);
 
-        assertThat(generatePdfRequest.values).containsAllEntriesOf(values);
+        assertThat(generatePdfRequest.values).containsAllEntriesOf(values).hasSameSizeAs(values);
     }
 }
