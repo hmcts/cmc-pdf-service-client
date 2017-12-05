@@ -46,7 +46,7 @@ public class PDFServiceClient {
 
         try {
             return restTemplate.postForObject(
-                htmlEndpoint(),
+                pdfServiceBaseUrl.resolve("/pdfs"),
                 requestEntityFor(template, placeholders),
                 byte[].class);
         } catch (HttpClientErrorException e) {
@@ -80,10 +80,6 @@ public class PDFServiceClient {
             return Health.down(ex)
                 .build();
         }
-    }
-
-    private URI htmlEndpoint() {
-        return pdfServiceBaseUrl.resolve("/pdfs");
     }
 
     private HttpEntity<String> requestEntityFor(
