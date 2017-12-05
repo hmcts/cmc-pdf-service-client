@@ -31,7 +31,7 @@ public class PDFServiceClientTest {
     }
 
     @Test
-    public void requests_new_endpoint() {
+    public void sends_requests_to_then_new_url() {
         pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
 
         ArgumentCaptor<URI> uriArgumentCaptor = ArgumentCaptor.forClass(URI.class);
