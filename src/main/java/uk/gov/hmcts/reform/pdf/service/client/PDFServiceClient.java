@@ -1,17 +1,17 @@
 package uk.gov.hmcts.reform.pdf.service.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.health.Health;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.pdf.service.client.exception.PDFServiceClientException;
 
@@ -24,20 +24,23 @@ import static uk.gov.hmcts.reform.pdf.service.client.util.Preconditions.requireN
 
 public class PDFServiceClient {
 
-    private static final String GENERATE_FROM_HTML_ENDPOINT_PATH = "/html";
     private static final Logger LOGGER = LoggerFactory.getLogger(PDFServiceClient.class);
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    public static final MediaType API_VERSION = MediaType.valueOf("application/vnd.uk.gov.hmcts.pdf-service.v2+json");
+    private final RestOperations restTemplate;
+    private final URI htmlEndpoint;
+    private final URI healthEndpoint;
 
-    private final RestTemplate restTemplate;
-    private final URI pdfServiceBaseUrl;
-    private final String version;
+    public PDFServiceClient(URI pdfServiceBaseUrl) {
+        this(new RestTemplate(), pdfServiceBaseUrl);
+    }
 
-    public PDFServiceClient(URI pdfServiceBaseUrl, String version) {
-        this.version = version;
+    public PDFServiceClient(RestOperations restTemplate, URI pdfServiceBaseUrl) {
         requireNonNull(pdfServiceBaseUrl);
-        requireNonNull(version);
 
-        this.restTemplate = new RestTemplate();
-        this.pdfServiceBaseUrl = pdfServiceBaseUrl;
+        this.restTemplate = restTemplate;
+        htmlEndpoint = pdfServiceBaseUrl.resolve("/pdfs");
+        healthEndpoint = pdfServiceBaseUrl.resolve("/health");
     }
 
     public byte[] generateFromHtml(byte[] template, Map<String, Object> placeholders) {
@@ -46,11 +49,11 @@ public class PDFServiceClient {
 
         try {
             return restTemplate.postForObject(
-                htmlEndpoint(),
-                requestEntityFor(template, placeholders),
+                htmlEndpoint,
+                createRequestEntityFor(template, placeholders),
                 byte[].class);
         } catch (HttpClientErrorException e) {
-            throw new PDFServiceClientException(e);
+            throw new PDFServiceClientException("Failed to request PDF from REST endpoint", e);
         }
     }
 
@@ -66,7 +69,7 @@ public class PDFServiceClient {
             HttpEntity<?> entity = new HttpEntity<Object>("", httpHeaders);
 
             ResponseEntity<InternalHealth> exchange = restTemplate.exchange(
-                pdfServiceBaseUrl.resolve("/health"),
+                healthEndpoint,
                 HttpMethod.GET,
                 entity,
                 InternalHealth.class);
@@ -82,51 +85,19 @@ public class PDFServiceClient {
         }
     }
 
-    private URI htmlEndpoint() {
-        return pdfServiceBaseUrl.resolve(
-            String.format("/api/%s/pdf-generator%s", version, GENERATE_FROM_HTML_ENDPOINT_PATH)
-        );
-    }
-
-    private HttpEntity<MultiValueMap<String, Object>> requestEntityFor(
+    private HttpEntity<String> createRequestEntityFor(
         byte[] template,
         Map<String, Object> placeholders) {
 
-        MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
-        formData.add("template", new FileBytesResource(template));
-        formData.add("placeholderValues", placeholders);
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        return new HttpEntity<>(formData, headers);
+        headers.setContentType(API_VERSION);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_PDF));
+
+        GeneratePdfRequest request = new GeneratePdfRequest(new String(template), placeholders);
+        try {
+            return new HttpEntity<>(OBJECT_MAPPER.writeValueAsString(request), headers);
+        } catch (JsonProcessingException e) {
+            throw new PDFServiceClientException("Failed to convert PDF request into JSON", e);
+        }
     }
-
-    /**
-     * The 'filename' attribute is needed in multipart/form-data part's Content-Disposition. Otherwise
-     * the endpoint will not treat sent bytes as a MultipartFile.
-     */
-    private static class FileBytesResource extends ByteArrayResource {
-
-        private static final String DEFAULT_FILE_NAME = "template.html";
-
-        private FileBytesResource(byte[] byteArray) {
-            super(byteArray);
-        }
-
-        @Override
-        public String getFilename() {
-            return DEFAULT_FILE_NAME;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return super.equals(obj);
-        }
-
-        @Override
-        public int hashCode() {
-            return super.hashCode();
-        }
-
-    }
-
 }
