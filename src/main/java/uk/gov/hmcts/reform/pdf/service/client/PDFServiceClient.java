@@ -43,14 +43,16 @@ public class PDFServiceClient {
         healthEndpoint = pdfServiceBaseUrl.resolve("/health");
     }
 
-    public byte[] generateFromHtml(byte[] template, Map<String, Object> placeholders) {
+    public byte[] generateFromHtml(String serviceAuthToken,
+                                   byte[] template,
+                                   Map<String, Object> placeholders) {
         requireNonEmpty(template);
         requireNonNull(placeholders);
 
         try {
             return restTemplate.postForObject(
                 htmlEndpoint,
-                createRequestEntityFor(template, placeholders),
+                createRequestEntityFor(serviceAuthToken, template, placeholders),
                 byte[].class);
         } catch (HttpClientErrorException e) {
             throw new PDFServiceClientException("Failed to request PDF from REST endpoint", e);
@@ -86,12 +88,14 @@ public class PDFServiceClient {
     }
 
     private HttpEntity<String> createRequestEntityFor(
+        String serviceAuthToken,
         byte[] template,
         Map<String, Object> placeholders) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(API_VERSION);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_PDF));
+        headers.add("ServiceAuthorization", serviceAuthToken);
 
         GeneratePdfRequest request = new GeneratePdfRequest(new String(template), placeholders);
         try {
