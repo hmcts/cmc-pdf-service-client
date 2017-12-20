@@ -48,7 +48,7 @@ public class PDFServiceClientTest {
 
     @Test
     public void sends_requests_to_then_new_url() {
-        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
+        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), emptyMap());
 
         ArgumentCaptor<URI> uriArgumentCaptor = ArgumentCaptor.forClass(URI.class);
         verify(restClient).postForObject(uriArgumentCaptor.capture(), any(), any());
@@ -57,7 +57,7 @@ public class PDFServiceClientTest {
 
     @Test
     public void request_content_type_contains_versioned_mime_type() {
-        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
+        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), emptyMap());
 
         verify(restClient).postForObject(any(), httpEntityArgument.capture(), any());
 
@@ -67,7 +67,7 @@ public class PDFServiceClientTest {
 
     @Test
     public void request_accepts_pdf() {
-        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
+        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), emptyMap());
 
         verify(restClient).postForObject(any(), httpEntityArgument.capture(), any());
 
@@ -76,7 +76,7 @@ public class PDFServiceClientTest {
 
     @Test
     public void template_contents_are_sent_in_request_template_field() throws IOException {
-        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
+        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), emptyMap());
 
         verify(restClient).postForObject(any(), httpEntityArgument.capture(), any());
 
