@@ -29,6 +29,7 @@ public class PDFServiceClient {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public static final MediaType API_VERSION = MediaType.valueOf("application/vnd.uk.gov.hmcts.pdf-service.v2+json");
+    public static final String SERVICE_AUTHORIZATION_HEADER = "ServiceAuthorization";
 
     private final RestOperations restOperations;
     private final Supplier<String> s2sAuthTokenSupplier;
@@ -68,7 +69,7 @@ public class PDFServiceClient {
         try {
             return restOperations.postForObject(
                 htmlEndpoint,
-                createRequestEntityFor(serviceAuthToken, template, placeholders),
+                createRequestEntityFor(s2sAuthTokenSupplier.get(), template, placeholders),
                 byte[].class);
         } catch (HttpClientErrorException e) {
             throw new PDFServiceClientException("Failed to request PDF from REST endpoint", e);
@@ -111,7 +112,7 @@ public class PDFServiceClient {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(API_VERSION);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_PDF));
-        headers.add("ServiceAuthorization", serviceAuthToken);
+        headers.add(SERVICE_AUTHORIZATION_HEADER, serviceAuthToken);
 
         GeneratePdfRequest request = new GeneratePdfRequest(new String(template), placeholders);
         try {
