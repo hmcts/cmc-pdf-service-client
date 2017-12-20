@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.pdf.service.client.exception.PDFServiceClientExceptio
 import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.pdf.service.client.util.Preconditions.requireNonEmpty;
@@ -26,33 +27,47 @@ public class PDFServiceClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PDFServiceClient.class);
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     public static final MediaType API_VERSION = MediaType.valueOf("application/vnd.uk.gov.hmcts.pdf-service.v2+json");
-    private final RestOperations restTemplate;
+    public static final String SERVICE_AUTHORIZATION_HEADER = "ServiceAuthorization";
+
+    private final RestOperations restOperations;
+    private final Supplier<String> s2sAuthTokenSupplier;
+
     private final URI htmlEndpoint;
     private final URI healthEndpoint;
 
-    public PDFServiceClient(URI pdfServiceBaseUrl) {
-        this(new RestTemplate(), pdfServiceBaseUrl);
+    public PDFServiceClient(
+        Supplier<String> s2sAuthTokenSupplier,
+        URI pdfServiceBaseUrl
+    ) {
+        this(new RestTemplate(), s2sAuthTokenSupplier, pdfServiceBaseUrl);
     }
 
-    public PDFServiceClient(RestOperations restTemplate, URI pdfServiceBaseUrl) {
+    public PDFServiceClient(
+        RestOperations restOperations,
+        Supplier<String> s2sAuthTokenSupplier,
+        URI pdfServiceBaseUrl
+    ) {
+        requireNonNull(restOperations);
+        requireNonNull(s2sAuthTokenSupplier);
         requireNonNull(pdfServiceBaseUrl);
 
-        this.restTemplate = restTemplate;
+        this.restOperations = restOperations;
+        this.s2sAuthTokenSupplier = s2sAuthTokenSupplier;
+
         htmlEndpoint = pdfServiceBaseUrl.resolve("/pdfs");
         healthEndpoint = pdfServiceBaseUrl.resolve("/health");
     }
 
-    public byte[] generateFromHtml(String serviceAuthToken,
-                                   byte[] template,
-                                   Map<String, Object> placeholders) {
+    public byte[] generateFromHtml(byte[] template, Map<String, Object> placeholders) {
         requireNonEmpty(template);
         requireNonNull(placeholders);
 
         try {
-            return restTemplate.postForObject(
+            return restOperations.postForObject(
                 htmlEndpoint,
-                createRequestEntityFor(serviceAuthToken, template, placeholders),
+                createRequestEntityFor(s2sAuthTokenSupplier.get(), template, placeholders),
                 byte[].class);
         } catch (HttpClientErrorException e) {
             throw new PDFServiceClientException("Failed to request PDF from REST endpoint", e);
@@ -70,7 +85,7 @@ public class PDFServiceClient {
 
             HttpEntity<?> entity = new HttpEntity<Object>("", httpHeaders);
 
-            ResponseEntity<InternalHealth> exchange = restTemplate.exchange(
+            ResponseEntity<InternalHealth> exchange = restOperations.exchange(
                 healthEndpoint,
                 HttpMethod.GET,
                 entity,
@@ -95,7 +110,7 @@ public class PDFServiceClient {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(API_VERSION);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_PDF));
-        headers.add("ServiceAuthorization", serviceAuthToken);
+        headers.add(SERVICE_AUTHORIZATION_HEADER, serviceAuthToken);
 
         GeneratePdfRequest request = new GeneratePdfRequest(new String(template), placeholders);
         try {
