@@ -19,11 +19,14 @@ public class PDFServiceClientInputChecksTest {
     @Mock
     private Supplier<String> s2sAuthTokenSupplier;
 
+    private URI testUri;
+
     private PDFServiceClient client;
 
     @Before
     public void beforeEachTest() throws URISyntaxException {
-        client = new PDFServiceClient(s2sAuthTokenSupplier, new URI("http://this-can-be-anything/"));
+        testUri = new URI("http://this-can-be-anything/");
+        client = new PDFServiceClient(s2sAuthTokenSupplier, testUri);
     }
 
     @Test(expected = NullPointerException.class)
@@ -42,8 +45,18 @@ public class PDFServiceClientInputChecksTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void constructorShouldThrowNullPointerWWhenGivenNullServiceURLString() {
-        new PDFServiceClient(null, null);
+    public void constructorShouldThrowNullPointerWhenGivenNullServiceURLString() {
+        new PDFServiceClient(s2sAuthTokenSupplier, null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void constructorShouldThrowNullPointerWhenGivenNullS2SAuthTokenSupplier() {
+        new PDFServiceClient(null, testUri);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void constructorShouldThrowNullPointerWhenGivenNullRestOperationsInstance() {
+        new PDFServiceClient(null, s2sAuthTokenSupplier, testUri);
     }
 
 }

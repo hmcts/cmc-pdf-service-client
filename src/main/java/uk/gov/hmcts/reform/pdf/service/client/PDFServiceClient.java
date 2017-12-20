@@ -30,7 +30,7 @@ public class PDFServiceClient {
 
     public static final MediaType API_VERSION = MediaType.valueOf("application/vnd.uk.gov.hmcts.pdf-service.v2+json");
 
-    private final RestOperations restTemplate;
+    private final RestOperations restOperations;
     private final Supplier<String> s2sAuthTokenSupplier;
 
     private final URI htmlEndpoint;
@@ -44,13 +44,15 @@ public class PDFServiceClient {
     }
 
     public PDFServiceClient(
-        RestOperations restTemplate,
+        RestOperations restOperations,
         Supplier<String> s2sAuthTokenSupplier,
         URI pdfServiceBaseUrl
     ) {
+        requireNonNull(restOperations);
+        requireNonNull(s2sAuthTokenSupplier);
         requireNonNull(pdfServiceBaseUrl);
 
-        this.restTemplate = restTemplate;
+        this.restOperations = restOperations;
         this.s2sAuthTokenSupplier = s2sAuthTokenSupplier;
 
         htmlEndpoint = pdfServiceBaseUrl.resolve("/pdfs");
@@ -64,7 +66,7 @@ public class PDFServiceClient {
         requireNonNull(placeholders);
 
         try {
-            return restTemplate.postForObject(
+            return restOperations.postForObject(
                 htmlEndpoint,
                 createRequestEntityFor(serviceAuthToken, template, placeholders),
                 byte[].class);
@@ -84,7 +86,7 @@ public class PDFServiceClient {
 
             HttpEntity<?> entity = new HttpEntity<Object>("", httpHeaders);
 
-            ResponseEntity<InternalHealth> exchange = restTemplate.exchange(
+            ResponseEntity<InternalHealth> exchange = restOperations.exchange(
                 healthEndpoint,
                 HttpMethod.GET,
                 entity,
