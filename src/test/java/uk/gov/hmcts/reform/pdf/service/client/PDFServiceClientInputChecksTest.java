@@ -31,17 +31,17 @@ public class PDFServiceClientInputChecksTest {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowIllegalArgumentExceptionWhenGivenNullTemplate() {
-        client.generateFromHtml(null, null, emptyMap());
+        client.generateFromHtml(null, emptyMap());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionWhenGivenEmptyTemplate() {
-        client.generateFromHtml(null, new byte[] { }, emptyMap());
+        client.generateFromHtml(new byte[] { }, emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowIllegalArgumentExceptionWhenGivenNullPlaceholders() {
-        client.generateFromHtml(null, "content".getBytes(Charset.defaultCharset()), null);
+        client.generateFromHtml("content".getBytes(Charset.defaultCharset()), null);
     }
 
     @Test(expected = NullPointerException.class)

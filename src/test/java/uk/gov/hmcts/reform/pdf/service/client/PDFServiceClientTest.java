@@ -48,7 +48,7 @@ public class PDFServiceClientTest {
 
     @Test
     public void sends_requests_to_then_new_url() {
-        pdfServiceClient.generateFromHtml(null, sampleTemplate.getBytes(), new HashMap<>());
+        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
 
         ArgumentCaptor<URI> uriArgumentCaptor = ArgumentCaptor.forClass(URI.class);
         verify(restClient).postForObject(uriArgumentCaptor.capture(), any(), any());
@@ -57,7 +57,7 @@ public class PDFServiceClientTest {
 
     @Test
     public void request_content_type_contains_versioned_mime_type() {
-        pdfServiceClient.generateFromHtml(null, sampleTemplate.getBytes(), new HashMap<>());
+        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
 
         verify(restClient).postForObject(any(), httpEntityArgument.capture(), any());
 
@@ -67,7 +67,7 @@ public class PDFServiceClientTest {
 
     @Test
     public void request_accepts_pdf() {
-        pdfServiceClient.generateFromHtml(null, sampleTemplate.getBytes(), new HashMap<>());
+        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
 
         verify(restClient).postForObject(any(), httpEntityArgument.capture(), any());
 
@@ -76,7 +76,7 @@ public class PDFServiceClientTest {
 
     @Test
     public void template_contents_are_sent_in_request_template_field() throws IOException {
-        pdfServiceClient.generateFromHtml(null, sampleTemplate.getBytes(), new HashMap<>());
+        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), new HashMap<>());
 
         verify(restClient).postForObject(any(), httpEntityArgument.capture(), any());
 
@@ -92,7 +92,7 @@ public class PDFServiceClientTest {
         values.put("hello", "World!");
         values.put("Foo", "bar");
 
-        pdfServiceClient.generateFromHtml(null, sampleTemplate.getBytes(), values);
+        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), values);
 
         verify(restClient).postForObject(any(), httpEntityArgument.capture(), any());
 
@@ -104,7 +104,7 @@ public class PDFServiceClientTest {
 
     @Test
     public void uses_provided_s2s_auth_token_supplier_when_making_a_call() {
-        pdfServiceClient.generateFromHtml(null, sampleTemplate.getBytes(), emptyMap());
+        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), emptyMap());
 
         verify(restClient).postForObject(any(), httpEntityArgument.capture(), any());
 

@@ -60,9 +60,7 @@ public class PDFServiceClient {
         healthEndpoint = pdfServiceBaseUrl.resolve("/health");
     }
 
-    public byte[] generateFromHtml(String serviceAuthToken,
-                                   byte[] template,
-                                   Map<String, Object> placeholders) {
+    public byte[] generateFromHtml(byte[] template, Map<String, Object> placeholders) {
         requireNonEmpty(template);
         requireNonNull(placeholders);
 
