@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.pdf.service.client.exception.PDFServiceClientExceptio
 import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.pdf.service.client.util.Preconditions.requireNonEmpty;
@@ -26,19 +27,32 @@ public class PDFServiceClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PDFServiceClient.class);
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     public static final MediaType API_VERSION = MediaType.valueOf("application/vnd.uk.gov.hmcts.pdf-service.v2+json");
+
     private final RestOperations restTemplate;
+    private final Supplier<String> s2sAuthTokenSupplier;
+
     private final URI htmlEndpoint;
     private final URI healthEndpoint;
 
-    public PDFServiceClient(URI pdfServiceBaseUrl) {
-        this(new RestTemplate(), pdfServiceBaseUrl);
+    public PDFServiceClient(
+        Supplier<String> s2sAuthTokenSupplier,
+        URI pdfServiceBaseUrl
+    ) {
+        this(new RestTemplate(), s2sAuthTokenSupplier, pdfServiceBaseUrl);
     }
 
-    public PDFServiceClient(RestOperations restTemplate, URI pdfServiceBaseUrl) {
+    public PDFServiceClient(
+        RestOperations restTemplate,
+        Supplier<String> s2sAuthTokenSupplier,
+        URI pdfServiceBaseUrl
+    ) {
         requireNonNull(pdfServiceBaseUrl);
 
         this.restTemplate = restTemplate;
+        this.s2sAuthTokenSupplier = s2sAuthTokenSupplier;
+
         htmlEndpoint = pdfServiceBaseUrl.resolve("/pdfs");
         healthEndpoint = pdfServiceBaseUrl.resolve("/health");
     }

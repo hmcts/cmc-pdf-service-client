@@ -3,7 +3,10 @@ package uk.gov.hmcts.reform.pdf.service.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestOperations;
@@ -12,22 +15,26 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+@RunWith(MockitoJUnitRunner.class)
 public class PDFServiceClientTest {
 
     private String endpointBase = "http://localhost";
     private RestOperations restClient = mock(RestOperations.class);
+    @Mock
+    private Supplier<String> s2sAuthTokenSupplier;
     private String sampleTemplate = "<html>Test</html>";
     private PDFServiceClient pdfServiceClient;
 
     @Before
     public void setup() {
-        pdfServiceClient = new PDFServiceClient(restClient, URI.create(endpointBase));
+        pdfServiceClient = new PDFServiceClient(restClient, s2sAuthTokenSupplier, URI.create(endpointBase));
     }
 
     @Test
