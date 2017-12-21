@@ -43,7 +43,9 @@ public class PDFServiceClientTest {
 
     @Before
     public void setup() {
-        pdfServiceClient = new PDFServiceClient(restClient, s2sAuthTokenSupplier, URI.create(ENDPOINT_BASE));
+        pdfServiceClient = PDFServiceClient.builder()
+            .restOperations(restClient)
+            .build(s2sAuthTokenSupplier, URI.create(ENDPOINT_BASE));
     }
 
     @Test

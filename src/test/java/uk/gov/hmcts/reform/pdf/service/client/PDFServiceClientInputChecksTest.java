@@ -1,10 +1,12 @@
 package uk.gov.hmcts.reform.pdf.service.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.web.client.RestOperations;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -17,6 +19,10 @@ import static java.util.Collections.emptyMap;
 public class PDFServiceClientInputChecksTest {
 
     @Mock
+    private ObjectMapper objectMapper;
+    @Mock
+    private RestOperations restOperations;
+    @Mock
     private Supplier<String> s2sAuthTokenSupplier;
 
     private URI testUri;
@@ -26,7 +32,7 @@ public class PDFServiceClientInputChecksTest {
     @Before
     public void beforeEachTest() throws URISyntaxException {
         testUri = new URI("http://this-can-be-anything/");
-        client = new PDFServiceClient(s2sAuthTokenSupplier, testUri);
+        client = PDFServiceClient.builder().build(s2sAuthTokenSupplier, testUri);
     }
 
     @Test(expected = NullPointerException.class)
@@ -46,17 +52,22 @@ public class PDFServiceClientInputChecksTest {
 
     @Test(expected = NullPointerException.class)
     public void constructorShouldThrowNullPointerWhenGivenNullServiceURLString() {
-        new PDFServiceClient(s2sAuthTokenSupplier, null);
+        new PDFServiceClient(restOperations, objectMapper, s2sAuthTokenSupplier, null);
     }
 
     @Test(expected = NullPointerException.class)
     public void constructorShouldThrowNullPointerWhenGivenNullS2SAuthTokenSupplier() {
-        new PDFServiceClient(null, testUri);
+        new PDFServiceClient(restOperations, objectMapper,null, testUri);
     }
 
     @Test(expected = NullPointerException.class)
-    public void constructorShouldThrowNullPointerWhenGivenNullRestOperationsInstance() {
-        new PDFServiceClient(null, s2sAuthTokenSupplier, testUri);
+    public void constructorShouldThrowNullPointerWhenGivenNullRestOperations() {
+        new PDFServiceClient(null, objectMapper, s2sAuthTokenSupplier, testUri);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void constructorShouldThrowNullPointerWhenGivenNullObjectMapper() {
+        new PDFServiceClient(restOperations, null, s2sAuthTokenSupplier, testUri);
     }
 
 }

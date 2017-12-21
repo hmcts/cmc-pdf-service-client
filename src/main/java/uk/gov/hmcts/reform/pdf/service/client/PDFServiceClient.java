@@ -26,37 +26,29 @@ import static uk.gov.hmcts.reform.pdf.service.client.util.Preconditions.requireN
 public class PDFServiceClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PDFServiceClient.class);
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public static final MediaType API_VERSION = MediaType
         .valueOf("application/vnd.uk.gov.hmcts.pdf-service.v2+json;charset=UTF-8");
     public static final String SERVICE_AUTHORIZATION_HEADER = "ServiceAuthorization";
 
     private final RestOperations restOperations;
+    private final ObjectMapper objectMapper;
     private final Supplier<String> s2sAuthTokenSupplier;
 
     private final URI htmlEndpoint;
     private final URI healthEndpoint;
 
     public PDFServiceClient(
-        Supplier<String> s2sAuthTokenSupplier,
-        URI pdfServiceBaseUrl
-    ) {
-        this(new RestTemplate(), s2sAuthTokenSupplier, pdfServiceBaseUrl);
-    }
-
-    public PDFServiceClient(
         RestOperations restOperations,
+        ObjectMapper objectMapper,
         Supplier<String> s2sAuthTokenSupplier,
         URI pdfServiceBaseUrl
     ) {
-        requireNonNull(restOperations);
-        requireNonNull(s2sAuthTokenSupplier);
+        this.restOperations = requireNonNull(restOperations);
+        this.objectMapper = requireNonNull(objectMapper);
+        this.s2sAuthTokenSupplier = requireNonNull(s2sAuthTokenSupplier);
+
         requireNonNull(pdfServiceBaseUrl);
-
-        this.restOperations = restOperations;
-        this.s2sAuthTokenSupplier = s2sAuthTokenSupplier;
-
         htmlEndpoint = pdfServiceBaseUrl.resolve("/pdfs");
         healthEndpoint = pdfServiceBaseUrl.resolve("/health");
     }
@@ -115,9 +107,33 @@ public class PDFServiceClient {
 
         GeneratePdfRequest request = new GeneratePdfRequest(new String(template), placeholders);
         try {
-            return new HttpEntity<>(OBJECT_MAPPER.writeValueAsString(request), headers);
+            return new HttpEntity<>(objectMapper.writeValueAsString(request), headers);
         } catch (JsonProcessingException e) {
             throw new PDFServiceClientException("Failed to convert PDF request into JSON", e);
         }
     }
+
+    public static class Builder {
+        private RestOperations restOperations = new RestTemplate();
+        private ObjectMapper objectMapper = new ObjectMapper();
+
+        public PDFServiceClient build(Supplier<String> s2sAuthTokenSupplier, URI pdfServiceBaseUrl) {
+            return new PDFServiceClient(restOperations, objectMapper, s2sAuthTokenSupplier, pdfServiceBaseUrl);
+        }
+
+        public Builder restOperations(RestOperations restOperations) {
+            this.restOperations = restOperations;
+            return this;
+        }
+
+        public Builder objectMapper(ObjectMapper objectMapper) {
+            this.objectMapper = objectMapper;
+            return this;
+        }
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
 }
