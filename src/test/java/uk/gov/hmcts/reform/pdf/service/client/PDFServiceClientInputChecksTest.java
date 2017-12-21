@@ -57,7 +57,7 @@ public class PDFServiceClientInputChecksTest {
 
     @Test(expected = NullPointerException.class)
     public void constructorShouldThrowNullPointerWhenGivenNullS2SAuthTokenSupplier() {
-        new PDFServiceClient(restOperations, objectMapper,null, testUri);
+        new PDFServiceClient(restOperations, objectMapper, null, testUri);
     }
 
     @Test(expected = NullPointerException.class)
