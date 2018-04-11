@@ -5,10 +5,11 @@ plugins {
   id 'checkstyle'
   id 'java-library'
   id "com.jfrog.bintray" version "1.7.3"
+  id 'io.spring.dependency-management' version '1.0.5.RELEASE'
 }
 
 group 'uk.gov.hmcts.reform'
-version '5.0.0'
+version '6.0.0'
 
 checkstyle.toolVersion = '7.2'
 checkstyle.configFile = new File(rootDir, "checkstyle.xml")
@@ -111,10 +112,16 @@ bintray {
   }
 }
 
-def springBootVersion = '1.5.6.RELEASE'
+def springBootVersion = '2.0.1.RELEASE'
+
+dependencyManagement {
+  imports {
+    mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
+  }
+}
 
 dependencies {
-  compile group: 'org.springframework', name: 'spring-web', version: '4.3.10.RELEASE'
+  compile group: 'org.springframework', name: 'spring-web'
   compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: springBootVersion
 
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: '1.4.0'
