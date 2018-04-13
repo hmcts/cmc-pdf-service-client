@@ -122,9 +122,9 @@ dependencyManagement {
 
 dependencies {
   compile group: 'org.springframework', name: 'spring-web'
-  compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: springBootVersion
+  compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
 
-  compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: '1.4.0'
+  compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: '3.0.0'
 
-  testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion
+  testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 }
