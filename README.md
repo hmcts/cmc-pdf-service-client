@@ -1,4 +1,7 @@
-# PDF service
+[![Travis badge](https://api.travis-ci.org/hmcts/cmc-pdf-service-client.svg?branch=master)](https://travis-ci.org/hmcts/cmc-pdf-service-client)
+[![Download](https://api.bintray.com/packages/hmcts/hmcts-maven/pdf-service-client/images/download.svg) ](https://bintray.com/hmcts/hmcts-maven/pdf-service-client/_latestVersion)
+
+# PDF service client
 
 This is a client library for pdf-service, which allows to generate read-only PDFs based on given template in HTML/Twig format and 
 placeholder data in JSON format. 
@@ -45,4 +48,4 @@ For the versions available, see the tags on this repository.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
