@@ -10,7 +10,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.web.client.RestOperations;
 
 import java.net.URI;
-import java.util.function.Supplier;
 
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,14 +27,12 @@ public class PDFServiceClientBuilderTest {
     private ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     private RestOperations restOperations;
-    @Mock
-    private Supplier<String> s2sAuthTokenSupplier;
 
     private URI baseUri = URI.create("https://some-host");
 
     @Test
     public void itShouldBePossibleToBuildClientInstanceWithDefaults() {
-        PDFServiceClient client = PDFServiceClient.builder().build(s2sAuthTokenSupplier, baseUri);
+        PDFServiceClient client = PDFServiceClient.builder().build(baseUri);
         assertThat(client).isNotNull();
     }
 
@@ -43,7 +40,7 @@ public class PDFServiceClientBuilderTest {
     public void itShouldUseProvidedRestOperations() {
         PDFServiceClient client = PDFServiceClient.builder()
             .restOperations(restOperations)
-            .build(s2sAuthTokenSupplier, baseUri);
+            .build(baseUri);
 
         client.generateFromHtml(TEST_TEMPLATE, emptyMap());
 
@@ -55,7 +52,7 @@ public class PDFServiceClientBuilderTest {
         PDFServiceClient client = PDFServiceClient.builder()
             .objectMapper(objectMapper)
             .restOperations(restOperations)
-            .build(s2sAuthTokenSupplier, baseUri);
+            .build(baseUri);
 
         client.generateFromHtml(TEST_TEMPLATE, emptyMap());
 

@@ -28,14 +28,11 @@ import static org.mockito.Mockito.verify;
 public class PDFServiceClientTest {
 
     private static final String ENDPOINT_BASE = "http://localhost";
-    private static final String S2S_AUTH_TOKEN = "test-s2s-auth-token";
 
     @Mock
     private RestOperations restClient;
     @Captor
     private ArgumentCaptor<HttpEntity> httpEntityArgument;
-
-    private Supplier<String> s2sAuthTokenSupplier = () -> S2S_AUTH_TOKEN;
 
     private String sampleTemplate = "<html>Test</html>";
 
@@ -45,7 +42,7 @@ public class PDFServiceClientTest {
     public void setup() {
         pdfServiceClient = PDFServiceClient.builder()
             .restOperations(restClient)
-            .build(s2sAuthTokenSupplier, URI.create(ENDPOINT_BASE));
+            .build(URI.create(ENDPOINT_BASE));
     }
 
     @Test
@@ -102,16 +99,6 @@ public class PDFServiceClientTest {
             .readValue(httpEntityArgument.getValue().getBody().toString(), GeneratePdfRequest.class);
 
         assertThat(generatePdfRequest.values).containsAllEntriesOf(values).hasSameSizeAs(values);
-    }
-
-    @Test
-    public void uses_provided_s2s_auth_token_supplier_when_making_a_call() {
-        pdfServiceClient.generateFromHtml(sampleTemplate.getBytes(), emptyMap());
-
-        verify(restClient).postForObject(any(), httpEntityArgument.capture(), any());
-
-        HttpHeaders headers = httpEntityArgument.getValue().getHeaders();
-        assertThat(headers.getFirst(PDFServiceClient.SERVICE_AUTHORIZATION_HEADER)).isEqualTo(S2S_AUTH_TOKEN);
     }
 
 }

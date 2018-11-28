@@ -18,7 +18,6 @@ import uk.gov.hmcts.reform.pdf.service.client.exception.PDFServiceClientExceptio
 import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.pdf.service.client.util.Preconditions.requireNonEmpty;
@@ -33,7 +32,6 @@ public class PDFServiceClient {
 
     private final RestOperations restOperations;
     private final ObjectMapper objectMapper;
-    private final Supplier<String> s2sAuthTokenSupplier;
 
     private final URI htmlEndpoint;
     private final URI healthEndpoint;
@@ -41,12 +39,10 @@ public class PDFServiceClient {
     public PDFServiceClient(
         RestOperations restOperations,
         ObjectMapper objectMapper,
-        Supplier<String> s2sAuthTokenSupplier,
         URI pdfServiceBaseUrl
     ) {
         this.restOperations = requireNonNull(restOperations);
         this.objectMapper = requireNonNull(objectMapper);
-        this.s2sAuthTokenSupplier = requireNonNull(s2sAuthTokenSupplier);
 
         requireNonNull(pdfServiceBaseUrl);
         htmlEndpoint = pdfServiceBaseUrl.resolve("/pdfs");
@@ -60,8 +56,9 @@ public class PDFServiceClient {
         try {
             return restOperations.postForObject(
                 htmlEndpoint,
-                createRequestEntityFor(s2sAuthTokenSupplier.get(), template, placeholders),
-                byte[].class);
+                createRequestEntityFor(template, placeholders),
+                byte[].class
+            );
         } catch (HttpClientErrorException e) {
             throw new PDFServiceClientException("Failed to request PDF from REST endpoint", e);
         }
@@ -96,14 +93,12 @@ public class PDFServiceClient {
     }
 
     private HttpEntity<String> createRequestEntityFor(
-        String serviceAuthToken,
         byte[] template,
         Map<String, Object> placeholders) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(API_VERSION);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_PDF));
-        headers.add(SERVICE_AUTHORIZATION_HEADER, serviceAuthToken);
 
         GeneratePdfRequest request = new GeneratePdfRequest(new String(template), placeholders);
         try {
@@ -117,8 +112,8 @@ public class PDFServiceClient {
         private RestOperations restOperations = new RestTemplate();
         private ObjectMapper objectMapper = new ObjectMapper();
 
-        public PDFServiceClient build(Supplier<String> s2sAuthTokenSupplier, URI pdfServiceBaseUrl) {
-            return new PDFServiceClient(restOperations, objectMapper, s2sAuthTokenSupplier, pdfServiceBaseUrl);
+        public PDFServiceClient build(URI pdfServiceBaseUrl) {
+            return new PDFServiceClient(restOperations, objectMapper, pdfServiceBaseUrl);
         }
 
         public Builder restOperations(RestOperations restOperations) {

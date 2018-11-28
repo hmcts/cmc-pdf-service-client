@@ -11,7 +11,6 @@ import org.springframework.web.client.RestOperations;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.util.function.Supplier;
 
 import static java.util.Collections.emptyMap;
 
@@ -22,8 +21,6 @@ public class PDFServiceClientInputChecksTest {
     private ObjectMapper objectMapper;
     @Mock
     private RestOperations restOperations;
-    @Mock
-    private Supplier<String> s2sAuthTokenSupplier;
 
     private URI testUri;
 
@@ -32,7 +29,7 @@ public class PDFServiceClientInputChecksTest {
     @Before
     public void beforeEachTest() throws URISyntaxException {
         testUri = new URI("http://this-can-be-anything/");
-        client = PDFServiceClient.builder().build(s2sAuthTokenSupplier, testUri);
+        client = PDFServiceClient.builder().build(testUri);
     }
 
     @Test(expected = NullPointerException.class)
@@ -52,22 +49,17 @@ public class PDFServiceClientInputChecksTest {
 
     @Test(expected = NullPointerException.class)
     public void constructorShouldThrowNullPointerWhenGivenNullServiceURLString() {
-        new PDFServiceClient(restOperations, objectMapper, s2sAuthTokenSupplier, null);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void constructorShouldThrowNullPointerWhenGivenNullS2SAuthTokenSupplier() {
-        new PDFServiceClient(restOperations, objectMapper, null, testUri);
+        new PDFServiceClient(restOperations, objectMapper, null);
     }
 
     @Test(expected = NullPointerException.class)
     public void constructorShouldThrowNullPointerWhenGivenNullRestOperations() {
-        new PDFServiceClient(null, objectMapper, s2sAuthTokenSupplier, testUri);
+        new PDFServiceClient(null, objectMapper, testUri);
     }
 
     @Test(expected = NullPointerException.class)
     public void constructorShouldThrowNullPointerWhenGivenNullObjectMapper() {
-        new PDFServiceClient(restOperations, null, s2sAuthTokenSupplier, testUri);
+        new PDFServiceClient(restOperations, null, testUri);
     }
 
 }
