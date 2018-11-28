@@ -28,7 +28,6 @@ public class PDFServiceClient {
 
     public static final MediaType API_VERSION = MediaType
         .valueOf("application/vnd.uk.gov.hmcts.pdf-service.v2+json;charset=UTF-8");
-    public static final String SERVICE_AUTHORIZATION_HEADER = "ServiceAuthorization";
 
     private final RestOperations restOperations;
     private final ObjectMapper objectMapper;
