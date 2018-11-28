@@ -9,7 +9,7 @@ plugins {
 }
 
 group 'uk.gov.hmcts.reform'
-version '6.0.0'
+version '7.0.0'
 
 checkstyle.toolVersion = '7.2'
 checkstyle.configFile = new File(rootDir, "checkstyle.xml")
