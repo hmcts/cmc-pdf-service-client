@@ -9,7 +9,9 @@ plugins {
 }
 
 group 'uk.gov.hmcts.reform'
-version '7.0.0'
+
+def buildNumber = System.getenv("RELEASE_VERSION")?.replace("refs/tags/", "") ?: "DEV-SNAPSHOT"
+version buildNumber
 
 checkstyle.toolVersion = '7.2'
 checkstyle.configFile = new File(rootDir, "checkstyle.xml")
