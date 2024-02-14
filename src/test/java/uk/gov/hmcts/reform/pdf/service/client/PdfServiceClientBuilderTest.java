@@ -1,12 +1,12 @@
 package uk.gov.hmcts.reform.pdf.service.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpEntity;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestOperations;
 
 import java.net.URI;
@@ -17,8 +17,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PDFServiceClientBuilderTest {
+@ExtendWith(SpringExtension.class)
+class PdfServiceClientBuilderTest {
 
     private static final byte[] TEST_TEMPLATE = "<html><body>Hello</body></html>".getBytes();
 
@@ -30,14 +30,14 @@ public class PDFServiceClientBuilderTest {
     private URI baseUri = URI.create("https://some-host");
 
     @Test
-    public void itShouldBePossibleToBuildClientInstanceWithDefaults() {
-        PDFServiceClient client = PDFServiceClient.builder().build(baseUri);
+    void itShouldBePossibleToBuildClientInstanceWithDefaults() {
+        PdfServiceClient client = PdfServiceClient.builder().build(baseUri);
         assertThat(client).isNotNull();
     }
 
     @Test
-    public void itShouldUseProvidedRestOperations() {
-        PDFServiceClient client = PDFServiceClient.builder()
+    void itShouldUseProvidedRestOperations() {
+        PdfServiceClient client = PdfServiceClient.builder()
             .restOperations(restOperations)
             .build(baseUri);
 
@@ -47,8 +47,8 @@ public class PDFServiceClientBuilderTest {
     }
 
     @Test
-    public void itShouldUseProvidedObjectMapper() throws Exception {
-        PDFServiceClient client = PDFServiceClient.builder()
+    void itShouldUseProvidedObjectMapper() throws Exception {
+        PdfServiceClient client = PdfServiceClient.builder()
             .objectMapper(objectMapper)
             .restOperations(restOperations)
             .build(baseUri);

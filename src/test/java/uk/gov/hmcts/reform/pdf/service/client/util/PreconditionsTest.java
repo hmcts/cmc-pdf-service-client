@@ -1,24 +1,29 @@
 package uk.gov.hmcts.reform.pdf.service.client.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class PreconditionsTest {
+class PreconditionsTest {
 
-    @Test(expected = NullPointerException.class)
-    public void notEmptyShouldThrowNullPointerExceptionWhenGivenEmptyArray() {
-        Preconditions.requireNonEmpty(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void notEmptyShouldThrowIllegalArgumentExceptionWhenGivenEmptyArray() {
-        Preconditions.requireNonEmpty(new byte[] {});
+    @Test
+    void notEmptyShouldThrowNullPointerExceptionWhenGivenEmptyArray() {
+        assertThrows(NullPointerException.class, () ->
+            Preconditions.requireNonEmpty(null)
+        );
     }
 
     @Test
-    public void notEmptyShouldNotThrowWhenGivenNonEmptyArray() {
+    void notEmptyShouldThrowIllegalArgumentExceptionWhenGivenEmptyArray() {
+        assertThrows(IllegalArgumentException.class, () ->
+            Preconditions.requireNonEmpty(new byte[] {})
+        );
+    }
+
+    @Test
+    void notEmptyShouldNotThrowWhenGivenNonEmptyArray() {
         Throwable throwable = catchThrowable(() -> Preconditions.requireNonEmpty(new byte[] { 12, 34, 56, 78 }));
         assertThat(throwable).isNull();
     }
