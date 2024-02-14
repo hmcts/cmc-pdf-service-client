@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.boot.actuate.health.Status;
 
-import java.util.Map;
-
 /**
  * Can't manage to serialise the spring health class.
  * Jackson-java-8 modules constructor parameters won't work either :(
