@@ -3,7 +3,6 @@ plugins {
   id 'maven-publish'
   id 'checkstyle'
   id 'java-library'
-  id "com.jfrog.bintray" version "1.8.5"
   id 'io.spring.dependency-management' version '1.1.4'
 }
 
@@ -84,23 +83,6 @@ publishing {
         root.appendNode('url', 'https://github.com/hmcts/cmc-pdf-service-client')
         root.children().last() + pomConfig
       }
-    }
-  }
-}
-
-bintray {
-  user = System.getenv('BINTRAY_USER')
-  key = System.getenv('BINTRAY_KEY')
-  publications = ['Main']
-  publish = true
-  pkg {
-    repo = 'hmcts-maven'
-    name = 'pdf-service-client'
-    userOrg = 'hmcts'
-    licenses = ['MIT']
-    vcsUrl = 'https://github.com/hmcts/cmc-pdf-service-client'
-    version {
-      name = project.version
     }
   }
 }
