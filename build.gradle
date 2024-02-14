@@ -1,11 +1,10 @@
 plugins {
   id 'java'
-  id 'maven'
   id 'maven-publish'
   id 'checkstyle'
   id 'java-library'
-  id "com.jfrog.bintray" version "1.7.3"
-  id 'io.spring.dependency-management' version '1.0.5.RELEASE'
+  id "com.jfrog.bintray" version "1.8.5"
+  id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group 'uk.gov.hmcts.reform'
@@ -13,22 +12,13 @@ group 'uk.gov.hmcts.reform'
 def buildNumber = System.getenv("RELEASE_VERSION")?.replace("refs/tags/", "") ?: "DEV-SNAPSHOT"
 version buildNumber
 
-checkstyle.toolVersion = '7.2'
-checkstyle.configFile = new File(rootDir, "checkstyle.xml")
-
-// make build fail on Checkstyle issues (https://github.com/gradle/gradle/issues/881)
-tasks.withType(Checkstyle).each { checkstyleTask ->
-  checkstyleTask.doLast {
-    reports.all { report ->
-      def outputFile = report.destination
-      if (outputFile.exists() && outputFile.text.contains("<error ")) {
-        throw new GradleException("There were checkstyle warnings! For more info check $outputFile")
-      }
-    }
-  }
+checkstyle {
+  toolVersion = '10.13.0'
+  maxWarnings = 0
+  getConfigDirectory().set(new File(rootDir, "config/checkstyle"))
 }
 
-sourceCompatibility = 1.8
+sourceCompatibility = 17
 
 repositories {
   mavenLocal()
@@ -63,12 +53,12 @@ def pomConfig = {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-  classifier = 'sources'
+  archiveClassifier = 'sources'
   from sourceSets.main.allSource
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-  classifier = 'javadoc'
+  archiveClassifier = 'javadoc'
   from javadoc.destinationDir
 }
 
@@ -115,7 +105,11 @@ bintray {
   }
 }
 
-def springBootVersion = '2.0.1.RELEASE'
+test {
+  useJUnitPlatform()
+}
+
+def springBootVersion = '3.2.2'
 
 dependencyManagement {
   imports {
@@ -124,10 +118,10 @@ dependencyManagement {
 }
 
 dependencies {
-  compile group: 'org.springframework', name: 'spring-web'
-  compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-
-  compile group: 'com.github.hmcts', name: 'java-logging', version: '6.1.4'
-
-  testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+  implementation group: 'org.springframework', name: 'spring-web'
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+  implementation group: 'com.github.hmcts', name: 'java-logging', version: '6.1.4'
+  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.1'
+  testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+  testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.10.2'
 }
