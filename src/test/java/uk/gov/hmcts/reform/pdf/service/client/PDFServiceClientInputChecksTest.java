@@ -1,11 +1,11 @@
 package uk.gov.hmcts.reform.pdf.service.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestOperations;
 
 import java.net.URI;
@@ -13,9 +13,10 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 
 import static java.util.Collections.emptyMap;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PDFServiceClientInputChecksTest {
+@ExtendWith(SpringExtension.class)
+class PDFServiceClientInputChecksTest {
 
     @Mock
     private ObjectMapper objectMapper;
@@ -26,40 +27,51 @@ public class PDFServiceClientInputChecksTest {
 
     private PDFServiceClient client;
 
-    @Before
-    public void beforeEachTest() throws URISyntaxException {
+    @BeforeEach
+    void beforeEachTest() throws URISyntaxException {
         testUri = new URI("http://this-can-be-anything/");
         client = PDFServiceClient.builder().build(testUri);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowIllegalArgumentExceptionWhenGivenNullTemplate() {
-        client.generateFromHtml(null, emptyMap());
+    @Test
+    void shouldThrowIllegalArgumentExceptionWhenGivenNullTemplate() {
+        assertThrows(NullPointerException.class, () ->
+            client.generateFromHtml(null, emptyMap())
+        );
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowIllegalArgumentExceptionWhenGivenEmptyTemplate() {
-        client.generateFromHtml(new byte[] { }, emptyMap());
+    @Test
+    void shouldThrowIllegalArgumentExceptionWhenGivenEmptyTemplate() {
+        assertThrows(IllegalArgumentException.class, () ->
+            client.generateFromHtml(new byte[] { }, emptyMap())
+        );
     }
 
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowIllegalArgumentExceptionWhenGivenNullPlaceholders() {
-        client.generateFromHtml("content".getBytes(Charset.defaultCharset()), null);
+    @Test
+    void shouldThrowIllegalArgumentExceptionWhenGivenNullPlaceholders() {
+        assertThrows(NullPointerException.class, () ->
+            client.generateFromHtml("content".getBytes(Charset.defaultCharset()), null)
+        );
     }
 
-    @Test(expected = NullPointerException.class)
-    public void constructorShouldThrowNullPointerWhenGivenNullServiceURLString() {
-        new PDFServiceClient(restOperations, objectMapper, null);
+    @Test
+    void constructorShouldThrowNullPointerWhenGivenNullServiceUrlString() {
+        assertThrows(NullPointerException.class, () ->
+            new PDFServiceClient(restOperations, objectMapper, null)
+        );
     }
 
-    @Test(expected = NullPointerException.class)
-    public void constructorShouldThrowNullPointerWhenGivenNullRestOperations() {
-        new PDFServiceClient(null, objectMapper, testUri);
+    @Test
+    void constructorShouldThrowNullPointerWhenGivenNullRestOperations() {
+        assertThrows(NullPointerException.class, () ->
+            new PDFServiceClient(null, objectMapper, testUri)
+        );
     }
 
-    @Test(expected = NullPointerException.class)
-    public void constructorShouldThrowNullPointerWhenGivenNullObjectMapper() {
-        new PDFServiceClient(restOperations, null, testUri);
+    @Test
+    void constructorShouldThrowNullPointerWhenGivenNullObjectMapper() {
+        assertThrows(NullPointerException.class, () ->
+            new PDFServiceClient(restOperations, null, testUri)
+        );
     }
-
 }
