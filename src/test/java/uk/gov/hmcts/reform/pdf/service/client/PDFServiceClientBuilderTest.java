@@ -18,7 +18,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
-class PdfServiceClientBuilderTest {
+class PDFServiceClientBuilderTest {
 
     private static final byte[] TEST_TEMPLATE = "<html><body>Hello</body></html>".getBytes();
 
@@ -31,13 +31,13 @@ class PdfServiceClientBuilderTest {
 
     @Test
     void itShouldBePossibleToBuildClientInstanceWithDefaults() {
-        PdfServiceClient client = PdfServiceClient.builder().build(baseUri);
+        PDFServiceClient client = PDFServiceClient.builder().build(baseUri);
         assertThat(client).isNotNull();
     }
 
     @Test
     void itShouldUseProvidedRestOperations() {
-        PdfServiceClient client = PdfServiceClient.builder()
+        PDFServiceClient client = PDFServiceClient.builder()
             .restOperations(restOperations)
             .build(baseUri);
 
@@ -48,7 +48,7 @@ class PdfServiceClientBuilderTest {
 
     @Test
     void itShouldUseProvidedObjectMapper() throws Exception {
-        PdfServiceClient client = PdfServiceClient.builder()
+        PDFServiceClient client = PDFServiceClient.builder()
             .objectMapper(objectMapper)
             .restOperations(restOperations)
             .build(baseUri);

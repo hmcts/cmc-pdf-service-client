@@ -16,7 +16,7 @@ import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
-class PdfServiceClientInputChecksTest {
+class PDFServiceClientInputChecksTest {
 
     @Mock
     private ObjectMapper objectMapper;
@@ -25,12 +25,12 @@ class PdfServiceClientInputChecksTest {
 
     private URI testUri;
 
-    private PdfServiceClient client;
+    private PDFServiceClient client;
 
     @BeforeEach
     void beforeEachTest() throws URISyntaxException {
         testUri = new URI("http://this-can-be-anything/");
-        client = PdfServiceClient.builder().build(testUri);
+        client = PDFServiceClient.builder().build(testUri);
     }
 
     @Test
@@ -57,21 +57,21 @@ class PdfServiceClientInputChecksTest {
     @Test
     void constructorShouldThrowNullPointerWhenGivenNullServiceUrlString() {
         assertThrows(NullPointerException.class, () ->
-            new PdfServiceClient(restOperations, objectMapper, null)
+            new PDFServiceClient(restOperations, objectMapper, null)
         );
     }
 
     @Test
     void constructorShouldThrowNullPointerWhenGivenNullRestOperations() {
         assertThrows(NullPointerException.class, () ->
-            new PdfServiceClient(null, objectMapper, testUri)
+            new PDFServiceClient(null, objectMapper, testUri)
         );
     }
 
     @Test
     void constructorShouldThrowNullPointerWhenGivenNullObjectMapper() {
         assertThrows(NullPointerException.class, () ->
-            new PdfServiceClient(restOperations, null, testUri)
+            new PDFServiceClient(restOperations, null, testUri)
         );
     }
 }

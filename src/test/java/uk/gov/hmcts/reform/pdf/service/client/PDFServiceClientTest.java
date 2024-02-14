@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
-class PdfServiceClientTest {
+class PDFServiceClientTest {
 
     private static final String ENDPOINT_BASE = "http://localhost";
 
@@ -34,11 +34,11 @@ class PdfServiceClientTest {
 
     private String sampleTemplate = "<html>Test</html>";
 
-    private PdfServiceClient pdfServiceClient;
+    private PDFServiceClient pdfServiceClient;
 
     @BeforeEach
     void setup() {
-        pdfServiceClient = PdfServiceClient.builder()
+        pdfServiceClient = PDFServiceClient.builder()
             .restOperations(restClient)
             .build(URI.create(ENDPOINT_BASE));
     }
@@ -59,7 +59,7 @@ class PdfServiceClientTest {
         verify(restClient).postForObject(any(), httpEntityArgument.capture(), any());
 
         assertThat(httpEntityArgument.getValue().getHeaders().getContentType())
-            .isEqualTo(PdfServiceClient.API_VERSION);
+            .isEqualTo(PDFServiceClient.API_VERSION);
     }
 
     @Test
