@@ -10,7 +10,7 @@ placeholder data in JSON format.
 
 ### Prerequisites
 
-- [JDK 8](https://www.oracle.com/java)
+- [JDK 17](https://www.oracle.com/java)
 
 ### Building
 
