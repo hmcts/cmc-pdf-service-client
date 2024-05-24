@@ -91,7 +91,7 @@ test {
   useJUnitPlatform()
 }
 
-def springBootVersion = '3.2.5'
+def springBootVersion = '3.3.0'
 
 dependencyManagement {
   imports {
