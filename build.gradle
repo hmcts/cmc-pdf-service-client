@@ -12,7 +12,7 @@ def buildNumber = System.getenv("RELEASE_VERSION")?.replace("refs/tags/", "") ?:
 version buildNumber
 
 checkstyle {
-  toolVersion = '10.17.0'
+  toolVersion = '10.18.0'
   maxWarnings = 0
   getConfigDirectory().set(new File(rootDir, "config/checkstyle"))
 }
