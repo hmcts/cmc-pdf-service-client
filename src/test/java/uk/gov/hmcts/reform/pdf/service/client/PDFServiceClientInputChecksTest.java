@@ -11,6 +11,7 @@ import org.springframework.web.client.RestOperations;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.util.Map;
 
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -34,23 +35,27 @@ class PDFServiceClientInputChecksTest {
     }
 
     @Test
-    void shouldThrowIllegalArgumentExceptionWhenGivenNullTemplate() {
+    void shouldThrowNullPointerExceptionWhenGivenNullTemplate() {
+        Map<String, Object> placeholders = emptyMap();
         assertThrows(NullPointerException.class, () ->
-            client.generateFromHtml(null, emptyMap())
+            client.generateFromHtml(null, placeholders)
         );
     }
 
     @Test
     void shouldThrowIllegalArgumentExceptionWhenGivenEmptyTemplate() {
+        Map<String, Object> placeholders = emptyMap();
+        byte[] empty = new byte[] {};
         assertThrows(IllegalArgumentException.class, () ->
-            client.generateFromHtml(new byte[] { }, emptyMap())
+            client.generateFromHtml(empty, placeholders)
         );
     }
 
     @Test
-    void shouldThrowIllegalArgumentExceptionWhenGivenNullPlaceholders() {
+    void shouldThrowNullPointerExceptionWhenGivenNullPlaceholders() {
+        byte[] template = "content".getBytes(Charset.defaultCharset());
         assertThrows(NullPointerException.class, () ->
-            client.generateFromHtml("content".getBytes(Charset.defaultCharset()), null)
+            client.generateFromHtml(template, null)
         );
     }
 
