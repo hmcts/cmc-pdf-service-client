@@ -49,7 +49,7 @@ class PDFServiceClientTest {
 
         ArgumentCaptor<URI> uriArgumentCaptor = ArgumentCaptor.forClass(URI.class);
         verify(restClient).postForObject(uriArgumentCaptor.capture(), any(), any());
-        assertThat(uriArgumentCaptor.getValue().toString()).isEqualTo(ENDPOINT_BASE + "/pdfs");
+        assertThat(uriArgumentCaptor.getValue().toString()).hasToString(ENDPOINT_BASE + "/pdfs");
     }
 
     @Test
@@ -80,7 +80,7 @@ class PDFServiceClientTest {
         GeneratePdfRequest generatePdfRequest = new ObjectMapper()
             .readValue(httpEntityArgument.getValue().getBody().toString(), GeneratePdfRequest.class);
 
-        assertThat(generatePdfRequest.template).isEqualTo(sampleTemplate);
+        assertThat(generatePdfRequest.template()).isEqualTo(sampleTemplate);
     }
 
     @Test
@@ -96,6 +96,6 @@ class PDFServiceClientTest {
         GeneratePdfRequest generatePdfRequest = new ObjectMapper()
             .readValue(httpEntityArgument.getValue().getBody().toString(), GeneratePdfRequest.class);
 
-        assertThat(generatePdfRequest.values).containsAllEntriesOf(values).hasSameSizeAs(values);
+        assertThat(generatePdfRequest.values()).containsAllEntriesOf(values).hasSameSizeAs(values);
     }
 }
