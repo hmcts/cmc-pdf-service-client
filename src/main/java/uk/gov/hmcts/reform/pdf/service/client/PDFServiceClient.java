@@ -70,9 +70,9 @@ public class PDFServiceClient {
     public Health serviceHealthy() {
         try {
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON_UTF8));
+            httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-            HttpEntity<?> entity = new HttpEntity<Object>("", httpHeaders);
+            HttpEntity<?> entity = new HttpEntity<>("", httpHeaders);
 
             ResponseEntity<InternalHealth> exchange = restOperations.exchange(
                 healthEndpoint,
@@ -82,7 +82,7 @@ public class PDFServiceClient {
 
             InternalHealth body = exchange.getBody();
 
-            return new Health.Builder(body.getStatus())
+            return new Health.Builder(body.status())
                 .build();
         } catch (Exception ex) {
             LOGGER.error("Error on pdf service healthcheck", ex);
