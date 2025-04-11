@@ -12,7 +12,7 @@ group 'uk.gov.hmcts.reform'
 version buildNumber
 
 checkstyle {
-  toolVersion = '10.21.0'
+  toolVersion = '10.23.0'
   maxWarnings = 0
   getConfigDirectory().set(new File(rootDir, "config/checkstyle"))
 }
