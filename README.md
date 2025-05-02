@@ -1,10 +1,23 @@
 [![](https://jitpack.io/v/hmcts/cmc-pdf-service-client.svg)](https://jitpack.io/#hmcts/cmc-pdf-service-client)
-[![JitPack Badge](https://github.com/hmcts/cmc-pdf-service-client/actions/workflows/gradle.yml/badge.svg)](https://github.com/hmcts/cmc-pdf-service-client/actions/workflows/gradle.yml)
 
 # PDF service client
 
 This is a client library for pdf-service, which allows to generate read-only PDFs based on given template in HTML/Twig format and
 placeholder data in JSON format.
+
+This library is hosted on Azure DevOps Artifacts and can be used in your project by adding the following to your `build.gradle` file:
+
+ ```gradle
+ repositories {
+     maven {
+         url 'https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1'
+     }
+ }
+
+ dependencies {
+   implementation 'com.github.hmcts:auth-checker-lib:LATEST_TAG'
+ }
+ ```
 
 ## Getting started
 
