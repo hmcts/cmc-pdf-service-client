@@ -26,6 +26,9 @@ java {
 repositories {
   mavenLocal()
   mavenCentral()
+  maven {
+    url = uri('https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1')
+  }
 }
 
 jar {
@@ -117,7 +120,7 @@ dependencyManagement {
 dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework.boot:spring-boot-starter-actuator'
-  implementation 'com.github.hmcts:java-logging:6.1.8'
+  implementation 'com.github.hmcts.java-logging:logging:6.1.9'
 
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
