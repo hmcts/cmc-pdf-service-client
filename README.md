@@ -1,5 +1,3 @@
-[![](https://jitpack.io/v/hmcts/cmc-pdf-service-client.svg)](https://jitpack.io/#hmcts/cmc-pdf-service-client)
-
 # PDF service client
 
 This is a client library for pdf-service, which allows to generate read-only PDFs based on given template in HTML/Twig format and
@@ -15,7 +13,7 @@ repositories {
 }
 
  dependencies {
-   implementation 'com.github.hmcts:auth-checker-lib:LATEST_TAG'
+   implementation 'com.github.hmcts:pdf-service-client:LATEST_TAG'
  }
  ```
 

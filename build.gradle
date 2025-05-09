@@ -1,8 +1,8 @@
 plugins {
   id 'java'
   id 'maven-publish'
-  id 'checkstyle'
   id 'java-library'
+  id 'uk.gov.hmcts.java' version '0.12.65'
   id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -11,11 +11,6 @@ def buildNumber = System.getenv("RELEASE_VERSION")?: "DEV-SNAPSHOT"
 group = 'com.github.hmcts'
 version = buildNumber
 
-checkstyle {
-  toolVersion = '10.21.0'
-  maxWarnings = 0
-  getConfigDirectory().set(new File(rootDir, "config/checkstyle"))
-}
 
 java {
   toolchain {
