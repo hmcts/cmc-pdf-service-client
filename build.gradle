@@ -104,7 +104,7 @@ tasks.withType(Test).configureEach {
   useJUnitPlatform()
 }
 
-def springBootVersion = '3.4.5'
+def springBootVersion = '3.5.10'
 
 dependencyManagement {
   imports {
