@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.pdf.service.client;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.boot.actuate.health.Status;
+import org.springframework.boot.health.contributor.Status;
 
 /**
  * Can't manage to serialise the spring health class.
